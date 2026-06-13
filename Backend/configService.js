@@ -72,6 +72,11 @@ async function loadConfig() {
       config[row.key] = isNaN(num) ? row.value : num;
     }
 
+    // Force override from environment variables if present
+    if (process.env.ML_SERVICE_URL) {
+      config.ml_service_url = process.env.ML_SERVICE_URL;
+    }
+
     _cache = config;
     _lastFetch = now;
     return config;
