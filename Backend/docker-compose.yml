@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: rozgarshield_db
+    restart: always
+    environment:
+      POSTGRES_USER: rozgarshield_user
+      POSTGRES_PASSWORD: rozgarshield_pass
+      POSTGRES_DB: rozgarshield
+    ports:
+      - "5432:5432"
+    volumes:
+      - rozgarshield_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rozgarshield_user -d rozgarshield"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: .
+    container_name: rozgarshield_backend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: postgres
+      DB_USER: rozgarshield_user
+      DB_PASSWORD: rozgarshield_pass
+      DB_NAME: rozgarshield
+      DB_PORT: 5432
+      PORT: 3000
+      WEATHER_API_KEY: ${WEATHER_API_KEY}
+      OPENWEATHER_API_KEY: ${OPENWEATHER_API_KEY}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      ADMIN_TOKEN_SECRET: ${ADMIN_TOKEN_SECRET}
+      ML_SERVICE_URL: ${ML_SERVICE_URL:-http://host.docker.internal:8001}
+      RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID}
+      RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET}
+      NODE_ENV: development
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+volumes:
+  rozgarshield_data:
