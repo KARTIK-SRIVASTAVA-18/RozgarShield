@@ -9,7 +9,7 @@ npm-debug.log*
 # Python
 __pycache__/
 *.pyc
-*.pkl
+# *.pkl (allowed for model deployment)
 venv/
 
 # IDE
