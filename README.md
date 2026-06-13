@@ -1,7 +1,7 @@
 # 🛡️ RozgarShield — Parametric Income Protection for Q-Commerce Delivery Workers
 
--**🚀 Try it out (Worker App):** https://rozgar-shield.vercel.app 
--**⬇️ Download APK:** [Download App](https://drive.google.com/file/d/1pQ9OAg19Ni90eBA8ldRlQtWkdDQiUlI-/view?usp=sharing)
+- **🚀 Try it out (Worker App):**`https://rozgar-shield.vercel.app
+- **⬇️ Download APK:** [Download for Android](https://drive.google.com/file/d/1pQ9OAg19Ni90eBA8ldRlQtWkdDQiUlI-/view?usp=sharing)
 
 ---
 
