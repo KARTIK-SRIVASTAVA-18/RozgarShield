@@ -41,7 +41,7 @@
 
 ## ⚙️ System Workflow
 
-```
+```text
 Worker Registers (Name + Phone + OTP Verification)
        ↓
 AI Calculates Weekly Premium (Zone Risk + Weather + Tenure)
@@ -63,27 +63,49 @@ Instant Payout via Razorpay → UPI Credit
 
 ## System Architecture
 
-> Full end-to-end architecture showing Flutter apps, Node.js backend, PostgreSQL database, and Docker deployment.
+> Full end-to-end architecture showing Flutter apps, Node.js backend, PostgreSQL database, and cloud deployment.
 
 ![RozgarShield Architecture](rozgarshield_architecture_fixed.svg)
 
-### Phase 1 — Concept & Design
+### Parametric Trigger Design
 
-> Our Phase 1 focused on system design, parametric trigger logic, and AI/ML architecture before any code was written.
-
-![RozgarShield Phase 1 Design](RozgarShield_parametric_trigger_design (2).svg)
+![RozgarShield Parametric Trigger Design](RozgarShield_parametric_trigger_design%20(2).svg)
 
 ### Architecture Overview
 
 | Layer | Technology | Purpose |
 |---|---|---|
-| **Worker App** | Flutter (iOS + Android) | Onboarding, OTP, Policy, Claims, Trigger alerts |
-| **Admin App** | Flutter (separate app) | Dashboard, Analytics, Zone risk, Plan management |
-| **Backend API** | Node.js + Express.js | 25+ REST endpoints, business logic modules |
+| **Worker App** | Flutter (Web/iOS/Android) | Onboarding, OTP, Policy, Claims, Trigger alerts |
+| **Admin App** | Flutter (Web/iOS/Android) | Dashboard, Analytics, Zone risk, Plan management |
+| **Backend API** | Node.js + Express.js | 35+ REST endpoints, business logic modules |
 | **AI/ML Service** | Python + FastAPI + XGBoost | Zone risk prediction (91.67% accuracy) |
 | **Payment Gateway** | Razorpay (Test Mode) | UPI payouts, order creation, signature verification |
-| **Database** | PostgreSQL | Workers, policies, claims, payouts, triggers, config |
-| **Deployment** | Docker + Docker Compose + Render | One-command cloud deployment |
+| **Database** | PostgreSQL (Neon) | Workers, policies, claims, payouts, triggers, config |
+| **Deployment** | Render + Neon + Vercel | Cloud deployment |
+
+---
+
+### 🧭 Design to Implementation Journey
+
+| Design (Planned) | Implementation (Built) |
+|---|---|
+| Parametric trigger concept | Working trigger engine with node-cron |
+| AI premium formula on paper | Live premiumEngine.js calculating real premiums |
+| Wireframe onboarding flow | Full Flutter app with GPS + OTP |
+| Fraud detection logic defined | GPS validation + duplicate prevention live |
+| Architecture diagram | Deployed on Render with PostgreSQL on Neon |
+
+---
+
+### 📐 System Design Decisions
+
+Our team focused on deep problem analysis before writing code:
+
+- Identified that Q-commerce workers face a **unique structural vulnerability** — hyper-local zones mean one disruption = 100% income loss
+- Designed the **parametric trigger system** — real-world events automatically fire payouts without any manual claim
+- Mapped out the **AI premium engine** — dynamic pricing based on zone risk, weather forecast, and worker tenure
+- Defined **fraud detection layers** — GPS spoofing detection, behavioral anomaly flags, duplicate claim prevention
+- Built the full **system architecture** — Flutter apps, Node.js backend, PostgreSQL, Docker
 
 ---
 
@@ -106,7 +128,7 @@ The system uses parametric triggers to automatically detect disruptions affectin
 
 ### Core Trigger Logic
 
-```
+```text
 IF (Trigger Detected)
 AND (Worker is Active in Zone)
 AND (Income Drop Confirmed)
@@ -145,7 +167,7 @@ The premium engine dynamically adjusts weekly rates using:
 
 RozgarShield focuses on accurate income loss prediction combined with verified external triggers.
 
-```
+```text
 Predict Expected Earnings → Compare with Actual → Calculate Income Gap → Trigger if Valid External Disruption
 ```
 
@@ -156,7 +178,7 @@ Predict Expected Earnings → Compare with Actual → Calculate Income Gap → T
 - **Features (6):** avg_monthly_rain_mm, flood_events_per_year, aqi_bad_days_per_month, dark_store_outages_month, avg_wind_speed_kmh, extreme_heat_days_month
 - **Accuracy:** 91.67% on test set
 - **Output:** LOW / MEDIUM / HIGH risk score → maps to premium adjustment
-- **Serving:** Python FastAPI on port 8001 (`/predict-risk`, `/model-info`)
+- **Serving:** Python FastAPI (`/predict-risk`, `/model-info`) — deployed on Render
 
 **2. Income Prediction Model (Prophet / LSTM)**
 - Input: Worker's past 4-week earnings, day-of-week, time-of-day, weather
@@ -169,7 +191,7 @@ Predict Expected Earnings → Compare with Actual → Calculate Income Gap → T
 
 ### Decision Engine
 
-```
+```text
 External Trigger
      +
 Worker Active (GPS verified)
@@ -201,7 +223,7 @@ PAYOUT APPROVED ✅
 | Risk Score | Action | Pipeline |
 |---|---|---|
 | 🟢 0-29 | Approve immediately | Claim created, payout processed |
-| 🟡 30-69 | Hold for review | Claim created, status = `fraud_review` |
+| 🟡 30-69 | Hold for review | Claim created, status = `processing` |
 | 🔴 70-100 | Block automatically | Claim rejected, worker flagged |
 
 **Admin Fraud Dashboard:**
@@ -210,49 +232,11 @@ PAYOUT APPROVED ✅
 
 ---
 
-## 📱 Phase 2 — What We Built
-
-> In Phase 1 we designed the full system on paper. In Phase 2 we built it, deployed it, and ran it on real phones with a live backend and database.
+## 📱 What We Built
 
 ---
 
-### 🧭 Phase 1 → Phase 2 Journey
-
-| Phase 1 (Design) | Phase 2 (Built) |
-|---|---|
-| Parametric trigger concept | Working trigger engine with node-cron |
-| AI premium formula on paper | Live premiumEngine.js calculating real premiums |
-| Wireframe onboarding flow | Full Flutter app with GPS + OTP |
-| Fraud detection logic defined | GPS validation + duplicate prevention live |
-| Architecture diagram | Deployed on Render with PostgreSQL |
-
----
-
-### 📐 Phase 1 — System Design (What We Planned)
-
-In Phase 1, our team spent 2.5 weeks doing deep problem analysis before writing a single line of code. We:
-
-- Identified that Q-commerce workers face a **unique structural vulnerability** — hyper-local zones mean one disruption = 100% income loss
-- Designed the **parametric trigger system** — real-world events automatically fire payouts without any manual claim
-- Mapped out the **AI premium engine** — dynamic pricing based on zone risk, weather forecast, and worker tenure
-- Defined **fraud detection layers** — GPS spoofing detection, behavioral anomaly flags, duplicate claim prevention
-- Built the full **system architecture** — Flutter apps, Node.js backend, PostgreSQL, Docker
-
-> 📊 See architecture and trigger design diagrams below
-
-![RozgarShield Phase 1 Parametric Trigger Design](RozgarShield_parametric_trigger_design%20(2).svg)
-
-**Phase 1 Demo:** https://youtu.be/62uDJHYd98Q
-
----
-
-### 🏗️ Phase 2 — Full System Implementation
-
-In Phase 2 we converted every design decision from Phase 1 into working code deployed on real infrastructure.
-
----
-
-#### 👷 Worker App (Flutter — iOS + Android)
+### 👷 Worker App (Flutter — Web/iOS/Android)
 
 The worker app is the primary product — what a Zepto or Blinkit delivery partner installs and uses daily.
 
@@ -274,7 +258,7 @@ The worker app is the primary product — what a Zepto or Blinkit delivery partn
 - Immediately creates a claim and shows the payout flow
 
 **Trigger Alert Flow (5-Screen Sequence):**
-```
+```text
 Screen 1: Trigger Detected    → Zone + Event type shown
 Screen 2: GPS Verified        → Worker location confirmed in zone
 Screen 3: Fraud Check Passed  → Clean behavior, no flags
@@ -288,7 +272,7 @@ Screen 5: Payout Animation    → ₹750 credited to UPI (simulated)
 
 ---
 
-#### 🖥️ Admin App (Flutter — separate Android app)
+### 🖥️ Admin App (Flutter — Web/iOS/Android)
 
 The admin app gives the RozgarShield operations team full real-time visibility and control.
 
@@ -329,9 +313,9 @@ The admin app gives the RozgarShield operations team full real-time visibility a
 
 ---
 
-#### ⚙️ Backend API (Node.js + Express — Deployed on Render)
+### ⚙️ Backend API (Node.js + Express — Deployed on Render)
 
-```
+```text
 https://rozgarshield-backend.onrender.com
 ```
 
@@ -342,14 +326,14 @@ https://rozgarshield-backend.onrender.com
 | `premiumEngine.js` | Calculates weekly premium: base + zone risk + weather risk − loyalty discount |
 | `triggerEngine.js` | Runs on node-cron schedule, auto-fires triggers when thresholds crossed |
 | `claimPipeline.js` | 4-layer fraud detection + claim creation + payout processing |
-| `paymentService.js` | **NEW** — Razorpay integration: order creation, signature verification, UPI payouts |
+| `paymentService.js` | Razorpay integration: order creation, signature verification, UPI payouts |
 | `configService.js` | Dynamic config from `app_config` table (zero hardcoded thresholds) |
 | `zoneService.js` | Auto zone syncing + geocoding for dynamic zone management |
-| `server.js` | 25+ REST endpoints: auth, policy, triggers, claims, admin, payments, analytics |
-| `db.js` | PostgreSQL connection pool with SSL for Render |
+| `server.js` | 35+ REST endpoints: auth, policy, triggers, claims, admin, payments, analytics |
+| `db.js` | PostgreSQL connection pool with SSL |
 
 **Key Endpoints:**
-```
+```text
 POST /register              → Worker signup + policy creation
 GET  /signin                → Login by phone number
 GET  /policy/:id            → Worker's active policy
@@ -372,11 +356,11 @@ GET  /api/model-info        → ML model accuracy & feature importance
 
 ---
 
-#### 🗄️ Database (PostgreSQL 16 — Live on Render)
+### 🗄️ Database (PostgreSQL 16 — Neon)
 
 8 tables, seeded automatically from `init.sql`:
 
-```
+```text
 workers        → id, name, phone, zone, platform, avg_daily_income, last_lat, last_lon, last_gps_time
 policies       → worker_id, plan_type, weekly_premium, max_payout, active
 trigger_events → zone, trigger_type, severity, value, status
@@ -389,13 +373,15 @@ app_config     → key, value, category, description (dynamic config)
 
 ---
 
-#### 🚢 Deployment (Docker + Render)
+### 🚢 Deployment
 
 - Backend packaged in Docker container with `Dockerfile`
 - `docker-compose.yml` spins up API + PostgreSQL together locally
-- Deployed to **Render** — auto-redeploys on every GitHub push
-- Environment managed via `.env` file (DB credentials, port, API keys, Razorpay keys)
-- Database hosted separately on **Render PostgreSQL** (free tier, Oregon region)
+- Backend deployed to **Render** — auto-redeploys on every GitHub push
+- ML Service deployed to **Render** as a separate Python service
+- Database hosted on **Neon** (serverless PostgreSQL)
+- Frontend apps deployed on **Vercel** (Flutter Web)
+- Environment managed via `.env` file (DB credentials, API keys, Razorpay keys)
 
 ---
 
@@ -403,59 +389,57 @@ app_config     → key, value, category, description (dynamic config)
 
 | Service | URL / Info |
 |---|---|
-| **Backend API** | https://rozgarshield-backend.onrender.com |
-| **Health Check** | https://rozgarshield-backend.onrender.com/health |
-| **Database** | PostgreSQL on Render (Oregon) |
-| **Worker APK** | [⬇️ Download Worker App](https://drive.google.com/file/d/1JSRpeNA95d1dxox6XoOLaP-NIGMwwCsG/view?usp=sharing) |
-| **Admin APK** | [⬇️ Download Admin App](https://drive.google.com/file/d/1JSRpeNA95d1dxox6XoOLaP-NIGMwwCsG/view?usp=sharing) |
+| **Backend API** | `https://rozgarshield-backend.onrender.com` |
+| **ML Model API** | `https://rozgarshield-ml.onrender.com` |
+| **Health Check** | `https://rozgarshield-backend.onrender.com/health` |
+| **Database** | PostgreSQL on Neon |
+| **Frontend App** | `https://rozgar-shield.vercel.app` |
+| **Admin App** | `https://rozgarshield-admin.vercel.app` |
 
 ---
 
 ## 🛠️ Tech Stack
 
-### Mobile Apps
-- **Flutter + Dart** — Cross-platform iOS + Android (two separate apps)
+### Mobile & Web Apps
+- **Flutter + Dart** — Cross-platform iOS + Android (two separate apps), also compiled to Web via Vercel
 - **http** — REST API calls
 - **Geolocator** — GPS zone auto-detection
 - **SharedPreferences** — Local worker_id storage
 - **pdf** — Policy certificate generation
 
 ### Backend
-- **Node.js + Express.js** — REST API server (25+ endpoints)
+- **Node.js + Express.js** — REST API server (35+ endpoints)
 - **pg (node-postgres)** — PostgreSQL connection pool
 - **node-cron** — Scheduled trigger detection
-- **Razorpay SDK** — Payment gateway integration (test mode)
+- **Razorpay SDK** — Payment gateway integration (test mode, graceful mock fallback)
 - **dotenv** — Environment config
 - **cors** — Cross-origin support
 
 ### Database
-- **PostgreSQL 16** — All persistent data (8 tables)
+- **PostgreSQL 16** — All persistent data (8 tables) on Neon
 - **init.sql** — Auto-seeds schema + config on first boot
-
-### Infrastructure
-- **Docker + Docker Compose** — Containerised API + DB
-- **Render** — Cloud deployment (backend + database)
-- **Git + GitHub** — Version control + auto-deploy on push
 
 ### AI/ML — ✅ LIVE
 - **XGBoost** — Zone risk scoring (91.67% accuracy, 600 training samples)
-- **Python + FastAPI** — AI model serving layer on port 8001
+- **Python + FastAPI** — AI model serving layer (deployed on Render)
 - **scikit-learn + joblib** — Model training, serialization, metrics
 
 ### Payment Gateway — ✅ LIVE
 - **Razorpay (Test Mode)** — Order creation, signature verification, UPI payouts
 - Graceful mock fallback when SDK unavailable
 
-### Dev Tools
-- **VS Code** — Primary IDE
-- **Postman** — API testing
-- **Git + GitHub** — Source control
+### Infrastructure
+- **Docker + Docker Compose** — Containerised API + DB for local development
+- **Render** — Cloud deployment for Node.js API and Python ML Service
+- **Neon** — Serverless PostgreSQL database
+- **Vercel** — Web hosting for Flutter applications
+- **Git + GitHub** — Version control + auto-deploy on push
 
 ---
 
 ## 🏃 Running Locally
 
-### Backend
+### Backend (with Docker)
 
 ```bash
 cd Backend
@@ -464,93 +448,39 @@ cp .env.example .env
 docker-compose up --build
 ```
 
+### Backend (without Docker)
+
+```bash
+cd Backend
+cp .env.example .env
+# Fill in DB credentials
+npm install
+npm start
+```
+
 API runs at: `http://localhost:3000`
 
-### Worker App
+### ML Service
 
 ```bash
+cd ml
+pip install -r requirements.txt
+uvicorn api:app --host 0.0.0.0 --port 8001
+```
+
+### Frontend Apps
+
+```bash
+# Worker App
 cd Frontend
 flutter pub get
-flutter run
-```
+flutter run -d chrome
 
-### Admin App
-
-```bash
+# Admin App
 cd admin_app
 flutter pub get
-flutter run
+flutter run -d chrome
 ```
-
----
-
-## Development Plan
-
-### Phase 1 (Mar 4–20): Problem Understanding & System Design ✅
-
-- [x] Identified core problem: income loss due to external disruptions
-- [x] Defined scope: focus only on worker income protection
-- [x] Analyzed Q-commerce system vulnerabilities (dark store dependency, hyperlocal zones)
-- [x] Designed parametric insurance logic (external triggers + income gap)
-- [x] Finalized AI approach (risk model + income prediction)
-- [x] Defined fraud prevention strategy (GPS + activity verification)
-- [x] Selected mobile-first architecture
-- [x] Completed system architecture and README
-
-### Phase 2 (Mar 21–Apr 5): Core System Implementation ✅
-
-- [x] Built Flutter worker app (onboarding + OTP + policy dashboard + trigger flow)
-- [x] Built Flutter admin app (dashboard + analytics + zone risk + plan management)
-- [x] Implemented weekly insurance policy system (Basic / Standard / Pro)
-- [x] Developed dynamic premium engine (zone risk + weather + tenure factors)
-- [x] Built parametric trigger engine with node-cron scheduling
-- [x] Implemented worker activity verification (GPS zone detection)
-- [x] Developed automated claim pipeline (trigger → verification → payout)
-- [x] Integrated basic fraud detection (duplicate prevention + GPS flags)
-- [x] Deployed backend on Render with PostgreSQL cloud database
-- [x] Built segmented plan comparison UI (Weekly Premium + Comparison tab)
-- [x] Implemented auto demo trigger simulation (fires 5–10s after login)
-- [x] Built full payout animation flow (step-by-step visual confirmation)
-- [x] Created PDF policy certificate generator
-- [x] Deployed both Android APKs for live demo
-
-### Phase 3 (Apr 5–17): Intelligence, Security & Demo ✅
-
-- [x] Integrated real weather APIs (OpenWeatherMap — current + 5-day forecast)
-- [x] Implemented XGBoost risk model with 600 training samples (91.67% accuracy)
-- [x] Trained on 6 features: rain, flood, AQI, dark store outages, wind speed, extreme heat
-- [x] Connected Razorpay payment gateway (test mode) with UPI payouts
-- [x] Built 4-layer fraud detection (weather cross-check + behavioral + GPS spoofing + response tiers)
-- [x] Built admin analytics dashboard (loss ratio, claims breakdown, 5-day predictive risk)
-- [x] Moved all thresholds to dynamic `app_config` table (zero hardcoded business logic)
-- [x] Removed all hardcoded zone fallbacks across 15+ Flutter files
-- [ ] Prepare final pitch presentation
-
----
-
-## 📱 Download & Try
-
-| App | Download |
-|---|---|
-| **Worker App (APK)** | [Download RozgarShield Worker](https://drive.google.com/file/d/1JSRpeNA95d1dxox6XoOLaP-NIGMwwCsG/view?usp=sharing) |
-| **Admin App (APK)** | [Download RozgarShield Admin](https://drive.google.com/file/d/1JSRpeNA95d1dxox6XoOLaP-NIGMwwCsG/view?usp=sharing) |
-
-> Install on any Android device. If blocked → Settings → Security → Allow Unknown Sources → Install.
-
-**Admin Login Credentials:**
-```
-Email:    admin@rozgarshield.com
-Password: rozgarshield@2026
-```
-
----
-
-## 🔗 Links
-
-- **GitHub Repository:** https://github.com/ssshreya24/rozgarshield-zepto-Blinkit
-- **Demo Video (Phase 1):** https://youtu.be/62uDJHYd98Q
-- **Demo Video (Phase 2):** https://drive.google.com/file/d/1JSRpeNA95d1dxox6XoOLaP-NIGMwwCsG/view?usp=sharing
-- **Live Backend:** https://rozgarshield-backend.onrender.com/health
 
 ---
 
