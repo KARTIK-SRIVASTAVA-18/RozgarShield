@@ -1,5 +1,8 @@
 # 🛡️ RozgarShield — Parametric Income Protection for Q-Commerce Delivery Workers
 
+**🚀 Try it out (Worker App):** `https://rozgar-shield.vercel.app`  
+**⬇️ Download APK:** [Download for Android](https://drive.google.com/file/d/1pQ9OAg19Ni90eBA8ldRlQtWkdDQiUlI-/view?usp=sharing)
+
 ---
 
 ## 🎯 Our Idea
@@ -395,6 +398,8 @@ app_config     → key, value, category, description (dynamic config)
 | **Database** | PostgreSQL on Neon |
 | **Frontend App** | `https://rozgar-shield.vercel.app` |
 | **Admin App** | `https://rozgarshield-admin.vercel.app` |
+| **Worker APK** | [⬇️ Download APK](https://drive.google.com/file/d/1pQ9OAg19Ni90eBA8ldRlQtWkdDQiUlI-/view?usp=sharing) |
+| **Admin APK** | [⬇️ Download Admin APK](https://drive.google.com/file/d/1qeyQRUFD9cPOTetsKh3QFQbG9YS8DM2w/view?usp=sharing) |
 
 ---
 
