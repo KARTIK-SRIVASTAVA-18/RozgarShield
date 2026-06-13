@@ -392,12 +392,12 @@ app_config     → key, value, category, description (dynamic config)
 
 | Service | URL / Info |
 |---|---|
-| **Backend API** | `https://rozgarshield-backend.onrender.com` |
-| **ML Model API** | `https://rozgarshield-ml.onrender.com` |
-| **Health Check** | `https://rozgarshield-backend.onrender.com/health` |
+| **Backend API** | https://rozgarshield-backend.onrender.com |
+| **ML Model API** | https://rozgarshield-ml.onrender.com |
+| **Health Check** | https://rozgarshield-backend.onrender.com/health |
 | **Database** | PostgreSQL on Neon |
-| **Frontend App** | `https://rozgar-shield.vercel.app` |
-| **Admin App** | `https://rozgarshield-admin.vercel.app` |
+| **Frontend App** | https://rozgar-shield.vercel.app |
+| **Admin App** | https://rozgarshield-admin.vercel.app |
 | **Worker APK** | [⬇️ Download APK](https://drive.google.com/file/d/1pQ9OAg19Ni90eBA8ldRlQtWkdDQiUlI-/view?usp=sharing) |
 | **Admin APK** | [⬇️ Download Admin APK](https://drive.google.com/file/d/1qeyQRUFD9cPOTetsKh3QFQbG9YS8DM2w/view?usp=sharing) |
 
