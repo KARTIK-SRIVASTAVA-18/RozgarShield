@@ -6,7 +6,7 @@ final String BASE_URL = const String.fromEnvironment(
   'BASE_URL',
   defaultValue: '',
 ).isNotEmpty ? const String.fromEnvironment('BASE_URL') 
-             : (kIsWeb ? 'http://localhost:3000' : 'http://192.168.0.9:3000');
+             : 'https://rozgarshield-backend.onrender.com';
 
 class ApiService {
 

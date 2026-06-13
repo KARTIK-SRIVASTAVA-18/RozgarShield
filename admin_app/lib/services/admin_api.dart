@@ -11,9 +11,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-// iOS Simulator  → http://localhost:3000
-// Android        → http://10.0.2.2:3000
-const String BASE_URL = 'http://localhost:3000';
+const String BASE_URL = 'https://rozgarshield-backend.onrender.com';
 
 class AdminApi {
 
