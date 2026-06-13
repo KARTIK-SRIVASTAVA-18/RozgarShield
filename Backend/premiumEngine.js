@@ -34,7 +34,9 @@ async function getPlans() {
 async function getZoneRiskMultiplier(zone) {
   try {
     const features = await getZoneFeatures(zone);
-    const mlUrl = await getConfig('ml_service_url');
+    let mlUrl = await getConfig('ml_service_url');
+    if (mlUrl.endsWith('/')) mlUrl = mlUrl.slice(0, -1);
+    
     const res = await axios.post(`${mlUrl}/predict-risk`, features);
     console.log(`[ML] Zone "${zone}" → risk=${res.data.risk_label}, multiplier=${res.data.premium_multiplier}`, features);
     return {
@@ -44,6 +46,8 @@ async function getZoneRiskMultiplier(zone) {
     };
   } catch (err) {
     const fallback = await getConfig('risk_multiplier_fallback');
+    console.error(`[ML ERROR] Failed to connect to ${err.config?.url || 'ML Service'}. Error: ${err.message}`);
+    if (err.response) console.error(`[ML ERROR DETAILS]`, err.response.data);
     console.warn(`ML service unavailable for zone "${zone}", using fallback multiplier ${fallback}`);
     return { multiplier: fallback, riskLabel: 'UNKNOWN', features: null };
   }
