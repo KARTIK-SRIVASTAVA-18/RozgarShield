@@ -1071,7 +1071,8 @@ app.put('/admin/fraud/:claimId/resolve', async (req, res) => {
 // ─── ML MODEL INFO (proxy to Python service) ────────────────
 app.get('/api/model-info', async (req, res) => {
   try {
-    const mlUrl = await getConfig('ml_service_url');
+    let mlUrl = await getConfig('ml_service_url');
+    if (mlUrl.endsWith('/')) mlUrl = mlUrl.slice(0, -1);
     const axios = require('axios');
     const response = await axios.get(`${mlUrl}/model-info`, { timeout: 3000 });
     res.json(response.data);
