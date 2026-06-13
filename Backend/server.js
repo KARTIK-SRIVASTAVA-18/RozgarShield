@@ -556,7 +556,7 @@ app.post('/demo/trigger', async (req, res) => {
       if (fraudScore >= 70) {
         claimStatus = 'rejected';
       } else if (fraudScore >= 30) {
-        claimStatus = 'fraud_review';
+        claimStatus = 'processing';
       } else {
         claimStatus = 'approved';
       }
